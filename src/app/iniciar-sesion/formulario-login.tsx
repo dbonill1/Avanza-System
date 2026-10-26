@@ -2,14 +2,12 @@
 
 import { useActionState } from "react";
 
+import { claseBotonPrincipal, claseCampo } from "@/components/pantalla-acceso";
 import type { EstadoLogin } from "@/lib/auth/esquemas";
 
 import { iniciarSesion } from "./acciones";
 
 const estadoInicial: EstadoLogin = { error: null, correo: "" };
-
-const claseCampo =
-  "h-12 rounded-md border border-borde-campo bg-campo px-4 text-base text-texto placeholder:text-tenue";
 
 export function FormularioLogin() {
   const [estado, accion, enviando] = useActionState(iniciarSesion, estadoInicial);
@@ -65,16 +63,13 @@ export function FormularioLogin() {
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={enviando}
-        className="h-13 rounded-md bg-avanza font-titulo text-xl font-bold uppercase tracking-widest text-white transition-opacity disabled:cursor-wait disabled:opacity-70"
-      >
+      <button type="submit" disabled={enviando} className={claseBotonPrincipal}>
         {enviando ? "Entrando…" : "Entrar"}
       </button>
 
       <div className="flex flex-col gap-2 border-t border-borde pt-4 text-sm leading-relaxed text-tenue">
         <p>¿Olvidaste tu contraseña? Pide al administrador que la restablezca.</p>
+        <p>Los administradores confirman con un código de su app autenticadora.</p>
       </div>
     </form>
   );

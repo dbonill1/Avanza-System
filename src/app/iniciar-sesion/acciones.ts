@@ -9,7 +9,8 @@ import {
   MENSAJE_INACTIVO,
   type EstadoLogin,
 } from "@/lib/auth/esquemas";
-import { leerUsuario } from "@/lib/auth/usuario-actual";
+import { rutaPendiente } from "@/lib/auth/dos-pasos";
+import { cargarUsuario } from "@/lib/auth/usuario-actual";
 import { crearClienteServidor } from "@/lib/supabase/servidor";
 
 export async function iniciarSesion(
@@ -42,11 +43,12 @@ export async function iniciarSesion(
 
   // La contraseña es correcta, pero solo entra quien tiene usuario activo en
   // la app (Auth no sabe nada de usuarios.activo).
-  const usuario = await leerUsuario(supabase, data.user.id);
+  const usuario = await cargarUsuario(supabase);
   if (!usuario) {
     await supabase.auth.signOut();
     return { error: MENSAJE_INACTIVO, correo: correoEscrito };
   }
 
-  redirect("/");
+  // Admin todavía no entra: primero el código de su app autenticadora.
+  redirect(rutaPendiente(usuario.dosPasos) ?? "/");
 }

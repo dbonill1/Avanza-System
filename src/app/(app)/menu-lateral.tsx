@@ -1,9 +1,10 @@
 import Link from "next/link";
 
 import { Marca } from "@/components/marca";
-import { ETIQUETA_ROL, type Rol, type UsuarioActual } from "@/lib/auth/usuario-actual";
+import { ETIQUETA_ROL, type Rol } from "@/lib/auth/roles";
+import type { UsuarioActual } from "@/lib/auth/usuario-actual";
 
-import { cerrarSesion } from "./acciones";
+import { cerrarSesion } from "@/lib/auth/cerrar-sesion";
 
 type Seccion = { nombre: string; roles: Rol[] };
 

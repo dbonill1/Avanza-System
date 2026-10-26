@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
-import { ETIQUETA_ROL, requerirUsuario } from "@/lib/auth/usuario-actual";
+import { ETIQUETA_ROL } from "@/lib/auth/roles";
+import { requerirUsuario } from "@/lib/auth/usuario-actual";
 
 export default function Inicio() {
   return (
