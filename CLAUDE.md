@@ -39,6 +39,10 @@ docs/especificacion.md.
 - Tareas pequeñas. Antes de cambios grandes, proponer un plan.
 - Cada función de dinero o permisos lleva tests.
 - Correr `npm test`, `npm run lint` y `npm run typecheck` antes de terminar una tarea.
+- Si se toca supabase/migrations: `npm run db:reset`, `npm run test:db` y
+  `npm run db:tipos`. Toda tabla nueva lleva sus tests de RLS en supabase/tests/.
+- Las funciones de permisos (rol_actual, es_admin, tiene_tienda…) viven en el
+  esquema `privado`, que la API no expone.
 - Interfaz en español (Nicaragua). Código y nombres de variables en español
   (los archivos de convención de Next.js, como page.tsx, se quedan como son).
 - No agregar dependencias sin explicar por qué.
