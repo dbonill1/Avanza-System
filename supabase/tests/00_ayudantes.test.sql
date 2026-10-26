@@ -93,11 +93,17 @@ end;
 $$;
 
 -- Escenario común: dos tiendas, un usuario por rol, un producto con costo.
+-- Primero vacía las tablas (incluido lo que cargó supabase/seed.sql) para
+-- que los conteos de los tests no dependan del seed. Cada test corre en una
+-- transacción con rollback, así que el seed vuelve al terminar.
 create or replace function pruebas.sembrar()
 returns void
 language plpgsql
 as $$
 begin
+  truncate public.usuario_tiendas, public.usuario_pines, public.producto_costos,
+    public.productos, public.usuarios, public.tiendas;
+
   insert into public.tiendas (nombre) values ('Tienda A'), ('Tienda B');
 
   perform pruebas.crear_usuario('admin', 'admin');

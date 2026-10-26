@@ -15,6 +15,10 @@ cp .env.example .env.local # llenar con las keys que imprimió db:start
 npm run dev
 ```
 
+La base local trae usuarios de prueba (uno por rol) y tres tiendas: ver
+`supabase/seed.sql`, que también tiene la contraseña de prueba. El seed solo
+se carga en local; nunca llega a staging ni producción.
+
 ## Comandos
 | Comando | Qué hace |
 | :--- | :--- |
