@@ -185,7 +185,8 @@ El riesgo principal es el fraude interno (descuentos inflados, anulaciones, ajus
 * Validación de toda entrada con Zod.
 * movimientos_inventario, pagos y bitacora son solo de inserción.
 * Acciones con PIN de gerente: descuento sobre el límite, anulación, ajuste de inventario, devolución.
-* Contraseñas fuertes; 2FA obligatorio para Admin; PIN de 4–6 dígitos para cajeros; cierre de sesión tras 15 minutos sin uso.
+* Contraseñas fuertes; 2FA obligatorio para Admin; PIN de 4–6 dígitos para cajeros.
+* **Decidido:** la sesión no se cierra sola por inactividad. Cada persona cierra su sesión al terminar su turno, sobre todo en una PC compartida.
 * La 2FA de Admin se aplica en la base de datos: una sesión de Admin sin el código (aal1) no tiene permisos de Admin ni ve datos. Si un Admin pierde el teléfono, se borra su factor en Supabase (Authentication → Users → el usuario → MFA) y la configura de nuevo al entrar. Conviene tener al menos dos administradores.
 * Secretos solo en variables de entorno; la service_role key de Supabase nunca llega al navegador.
 * Respaldo diario automático, con una prueba de restauración al mes.
