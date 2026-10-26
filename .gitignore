@@ -33,3 +33,6 @@ npm-debug.log*
 
 # archivos temporales de Office
 ~$*
+
+# Configuración local del panel de vista previa (rutas de esta máquina)
+/.claude/launch.json
