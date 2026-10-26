@@ -19,7 +19,7 @@ La base local trae usuarios de prueba (uno por rol) y tres tiendas: ver
 `supabase/seed.sql`, que también tiene la contraseña de prueba. El seed solo
 se carga en local; nunca llega a staging ni producción.
 
-El usuario admin de prueba tiene que configurar la verificación en dos pasos
+El admin local (diego@avanzaautopartes.com) tiene que configurar la verificación en dos pasos
 la primera vez que entra (escanea el QR con cualquier app autenticadora).
 `npm run db:reset` la borra junto con todo lo demás.
 

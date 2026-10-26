@@ -3,7 +3,7 @@
 --
 -- Todos los usuarios usan la contraseña de prueba:  Avanza-Prueba-2026
 --
---   admin@avanza.test       admin     (ve todas las tiendas)
+--   diego@avanzaautopartes.com  admin  (ve todas las tiendas)
 --   gerente1@avanza.test    gerente   Tienda 1
 --   cajero1@avanza.test     cajero    Tienda 1
 --   vendedor1@avanza.test   vendedor  Tienda 1
@@ -22,7 +22,7 @@ declare
 begin
   for u in
     select * from (values
-      ('admin@avanza.test', 'Administrador de prueba', 'admin'::public.rol_usuario, null::text, true),
+      ('diego@avanzaautopartes.com', 'Diego', 'admin'::public.rol_usuario, null::text, true),
       ('gerente1@avanza.test', 'Gerente de prueba', 'gerente', 'Tienda 1', true),
       ('cajero1@avanza.test', 'Cajero de prueba', 'cajero', 'Tienda 1', true),
       ('vendedor1@avanza.test', 'Vendedor de prueba', 'vendedor', 'Tienda 1', true),
