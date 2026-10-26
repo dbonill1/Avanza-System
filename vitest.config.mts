@@ -8,7 +8,5 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
-    // Los primeros tests (esquemas Zod) llegan en el paso 5 del plan.
-    passWithNoTests: true,
   },
 });
