@@ -1,0 +1,35 @@
+# dependencias
+/node_modules
+
+# Next.js
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# build
+/build
+
+# tests
+/coverage
+/test-results/
+/playwright-report/
+
+# variables de entorno: nunca se suben (excepto el ejemplo sin valores)
+.env*
+!.env.example
+
+# Supabase local
+/supabase/.branches
+/supabase/.temp
+
+# Vercel
+.vercel
+
+# sistema / editores
+.DS_Store
+*.pem
+npm-debug.log*
+
+# archivos temporales de Office
+~$*
