@@ -8,20 +8,34 @@ create schema if not exists pruebas;
 grant usage on schema pruebas to anon, authenticated;
 
 -- Simula una sesión de Supabase: mismo rol y claims que manda PostgREST.
-create or replace function pruebas.entrar_como(p_correo text)
+-- p_aal es el nivel de la sesión: 'aal1' = solo contraseña, 'aal2' = con 2FA.
+-- Por defecto, como en la vida real: Admin con 2FA y los demás sin ella.
+drop function if exists pruebas.entrar_como(text);
+create or replace function pruebas.entrar_como(p_correo text, p_aal text default null)
 returns void
 language plpgsql
 as $$
 declare
   v_id uuid := pruebas.id_usuario(p_correo);
+  v_aal text := coalesce(p_aal, case when pruebas.es_admin_de_prueba(v_id) then 'aal2' else 'aal1' end);
 begin
   perform set_config('role', 'authenticated', true);
   perform set_config(
     'request.jwt.claims',
-    json_build_object('sub', v_id, 'role', 'authenticated')::text,
+    json_build_object('sub', v_id, 'role', 'authenticated', 'aal', v_aal)::text,
     true
   );
 end;
+$$;
+
+create or replace function pruebas.es_admin_de_prueba(p_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from public.usuarios where id = p_id and rol = 'admin')
 $$;
 
 create or replace function pruebas.entrar_como_anon()
@@ -93,11 +107,17 @@ end;
 $$;
 
 -- Escenario común: dos tiendas, un usuario por rol, un producto con costo.
+-- Primero vacía las tablas (incluido lo que cargó supabase/seed.sql) para
+-- que los conteos de los tests no dependan del seed. Cada test corre en una
+-- transacción con rollback, así que el seed vuelve al terminar.
 create or replace function pruebas.sembrar()
 returns void
 language plpgsql
 as $$
 begin
+  truncate public.usuario_tiendas, public.usuario_pines, public.producto_costos,
+    public.productos, public.usuarios, public.tiendas;
+
   insert into public.tiendas (nombre) values ('Tienda A'), ('Tienda B');
 
   perform pruebas.crear_usuario('admin', 'admin');

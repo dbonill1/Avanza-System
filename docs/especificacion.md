@@ -39,7 +39,7 @@ Cada regla de este documento tiene un valor propuesto; cambia la columna "Propue
 | 8 | Moneda | Moneda de precios | Precio base en córdobas; muestra equivalente en USD con tipo de cambio del día |
 | 9 | Caja | ¿Se permite vender con stock en cero? | No; se crea un Pedido |
 | 10 | Inventario | ¿Costo promedio o último costo? | Costo promedio ponderado |
-| 11 | Equipos | Dispositivo de caja por tienda | Una PC o tablet por tienda + impresora térmica 80 mm |
+| 11 | Equipos | Dispositivo de caja por tienda | **Decidido:** una PC por tienda. Sin impresora: la factura se hace a mano en talonario |
 | 12 | Internet | ¿La caja debe funcionar sin internet? | Fase 4; fases 1–3 asumen conexión |
 | 13 | IVA | ¿Los precios incluyen IVA? | Sí, precios con IVA incluido; se muestra desglosado |
 
@@ -185,7 +185,9 @@ El riesgo principal es el fraude interno (descuentos inflados, anulaciones, ajus
 * Validación de toda entrada con Zod.
 * movimientos_inventario, pagos y bitacora son solo de inserción.
 * Acciones con PIN de gerente: descuento sobre el límite, anulación, ajuste de inventario, devolución.
-* Contraseñas fuertes; 2FA obligatorio para Admin; PIN de 4–6 dígitos para cajeros; cierre de sesión tras 15 minutos sin uso.
+* Contraseñas fuertes; 2FA obligatorio para Admin; PIN de 4–6 dígitos para cajeros.
+* **Decidido:** la sesión no se cierra sola por inactividad. Cada persona cierra su sesión al terminar su turno, sobre todo en una PC compartida.
+* La 2FA de Admin se aplica en la base de datos: una sesión de Admin sin el código (aal1) no tiene permisos de Admin ni ve datos. Si un Admin pierde el teléfono, se borra su factor en Supabase (Authentication → Users → el usuario → MFA) y la configura de nuevo al entrar. Conviene tener al menos dos administradores.
 * Secretos solo en variables de entorno; la service_role key de Supabase nunca llega al navegador.
 * Respaldo diario automático, con una prueba de restauración al mes.
 
@@ -202,20 +204,26 @@ El riesgo principal es el fraude interno (descuentos inflados, anulaciones, ajus
 * ☐ Piloto de 2–4 semanas en una tienda, cuadrando caja e inventario físico
 
 ## Stack y arquitectura
-Next.js + TypeScript en Vercel como app instalable (PWA), con Supabase para base de datos, autenticación y permisos.
+Next.js + TypeScript en Vercel como app web para PC, con Supabase para base de datos, autenticación y permisos.
 
 | Capa | Herramienta | Notas |
 | :---- | :---- | :---- |
-| Frontend | Next.js (App Router) + TypeScript + Tailwind + shadcn/ui | PWA instalable en PC, tablet o celular |
+| Frontend | Next.js (App Router) + TypeScript + Tailwind + shadcn/ui | Diseñada para PC (pantalla de escritorio, teclado y mouse) |
 | Lógica de negocio | Server Actions / API routes de Next.js | Aquí se calculan precios, descuentos y totales |
 | Base de datos | Supabase Postgres | RLS en todas las tablas |
 | Autenticación | Supabase Auth | Email + contraseña; PIN para cajeros; 2FA para Admin |
 | Validación | Zod | Mismos esquemas en cliente y servidor |
 | Tests | Vitest (lógica) + Playwright (flujos completos) | Corren en GitHub Actions en cada push |
 | Hosting | Vercel (app) + Supabase (datos) | Ambientes separados: staging y producción |
-| Impresión | Impresora térmica 80 mm vía navegador | Orden de venta, ticket de apartado, cotización |
+La app es la fuente de verdad del stock y las ventas. **No imprime nada:** la factura oficial se llena a mano en el talonario y la app solo registra su número.
 
-La app es la fuente de verdad del stock y las ventas.
+## Diseño visual
+Sigue la identidad de Avanza Autopartes (logo y portada de Facebook).
+
+* **Colores:** rojo Avanza `#EA0B1E` para acciones principales y acentos; fondos en gris (`#2A2C30` página, `#313338` paneles, `#393C41` campos); texto blanco y gris claro `#B4B4BC` para lo secundario.
+* **Logo:** `public/marca/` (símbolo rojo con la A, texto AVANZA en blanco). Conviene conseguir la versión vectorial (SVG) del diseñador.
+* **Tipografía:** Barlow para texto y Barlow Condensed para títulos y montos, cercana a la letra de "Accesorios Premium" de la portada.
+* **Uso en caja:** pantallas pensadas para PC, con atajos de teclado para cobrar rápido y montos grandes y legibles.
 
 ## Plan de construcción por fases
 Cuatro fases; cada una termina con algo usable en tienda y pasa las pruebas de seguridad antes de la siguiente.

@@ -36,7 +36,29 @@ export async function actualizarSesion(request: NextRequest) {
 
   // No poner código entre createServerClient y getClaims: getClaims es lo que
   // valida el token y dispara el refresco si venció.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+
+  // Chequeo rápido: sin sesión, al login. El chequeo real (usuario activo,
+  // rol) lo hacen el layout de (app) y RLS; esto solo evita renderizar de más.
+  const ruta = request.nextUrl.pathname;
+  const esPublica = RUTAS_PUBLICAS.some((r) => ruta === r || ruta.startsWith(`${r}/`));
+  if (!data?.claims && !esPublica) {
+    const destino = request.nextUrl.clone();
+    destino.pathname = "/iniciar-sesion";
+    destino.search = "";
+    const redireccion = NextResponse.redirect(destino);
+    // Conserva las cookies que getClaims haya actualizado (p. ej. al borrar
+    // una sesión vencida) y los encabezados no-store.
+    for (const cookie of respuesta.cookies.getAll()) {
+      redireccion.cookies.set(cookie);
+    }
+    respuesta.headers.forEach((valor, clave) => {
+      if (clave.toLowerCase() !== "location") redireccion.headers.set(clave, valor);
+    });
+    return redireccion;
+  }
 
   return respuesta;
 }
+
+const RUTAS_PUBLICAS = ["/iniciar-sesion"];

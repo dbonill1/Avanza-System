@@ -8,6 +8,9 @@ que dice "Documento interno – no válido como factura".
 Especificación completa: docs/especificacion.md
 Next.js 16 cambió APIs y convenciones: leer AGENTS.md antes de escribir código de Next.
 
+Se usa solo en PC y no imprime nada. Estilo visual: ver "Diseño visual"
+en docs/especificacion.md (rojo #EA0B1E sobre fondos grises, logo en public/marca/).
+
 ## Stack
 - Next.js (App Router) + TypeScript estricto + Tailwind + shadcn/ui
 - Supabase (Postgres, Auth, RLS)
